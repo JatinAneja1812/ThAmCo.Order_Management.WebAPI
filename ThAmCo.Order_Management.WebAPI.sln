@@ -3,7 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThAmCo.Order_Management.WebAPI", "ThAmCo.Order_Management.WebAPI\ThAmCo.Order_Management.WebAPI.csproj", "{9B3E17E7-50BB-423D-B814-351390479F13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThAmCo.Order_Management.WebAPI", "ThAmCo.Order_Management.WebAPI\ThAmCo.Order_Management.WebAPI.csproj", "{9B3E17E7-50BB-423D-B814-351390479F13}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCo.Order.Services", "ThAmCo.Order.Services", "{9D530A4B-018F-4C31-BE05-B3108A87AE62}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCo.Order.Data", "ThAmCo.Order.Data", "{59093032-DF26-47D7-8C44-0CDEDE992704}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmco.Order.Models", "ThAmco.Order.Models", "{452A4A05-D125-4DE7-8ECF-0F6B0CF5B38F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCo.Order.DTOs", "ThAmCo.Order.DTOs", "{76441291-8DD9-4C0C-975F-C80D112CFBCF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCO.Order.Repositories", "ThAmCO.Order.Repositories", "{388D0D99-F9AD-4564-9A32-44DFCD23EC00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThAmCo.Orders.DataContext", "ThAmCo.Orders.DataContext\ThAmCo.Orders.DataContext.csproj", "{E1819809-9394-4AEA-94CF-5BC1F1DBBACC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DomainObjects", "DomainObjects", "{F489DEB9-4289-4723-9E9D-294C3D22F078}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCo.Order.Enums", "ThAmCo.Order.Enums", "{8AEE0BD1-BFD1-48DC-ADD2-E2FAC6101EE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCo.Profiles.Mapper", "ThAmCo.Profiles.Mapper", "{840B9FBA-7230-4474-9980-C2A0BF54F398}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainDataObjects", "DomainDataObjects\DomainDataObjects.csproj", "{AC9D46A8-C716-437B-B168-E52C290BE5D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enums", "Enums\Enums.csproj", "{1CE239A3-AE66-4432-A879-206A7AD09522}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +37,27 @@ Global
 		{9B3E17E7-50BB-423D-B814-351390479F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B3E17E7-50BB-423D-B814-351390479F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B3E17E7-50BB-423D-B814-351390479F13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1819809-9394-4AEA-94CF-5BC1F1DBBACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1819809-9394-4AEA-94CF-5BC1F1DBBACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1819809-9394-4AEA-94CF-5BC1F1DBBACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1819809-9394-4AEA-94CF-5BC1F1DBBACC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC9D46A8-C716-437B-B168-E52C290BE5D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC9D46A8-C716-437B-B168-E52C290BE5D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC9D46A8-C716-437B-B168-E52C290BE5D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC9D46A8-C716-437B-B168-E52C290BE5D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CE239A3-AE66-4432-A879-206A7AD09522}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CE239A3-AE66-4432-A879-206A7AD09522}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CE239A3-AE66-4432-A879-206A7AD09522}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CE239A3-AE66-4432-A879-206A7AD09522}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E1819809-9394-4AEA-94CF-5BC1F1DBBACC} = {59093032-DF26-47D7-8C44-0CDEDE992704}
+		{F489DEB9-4289-4723-9E9D-294C3D22F078} = {452A4A05-D125-4DE7-8ECF-0F6B0CF5B38F}
+		{AC9D46A8-C716-437B-B168-E52C290BE5D3} = {452A4A05-D125-4DE7-8ECF-0F6B0CF5B38F}
+		{1CE239A3-AE66-4432-A879-206A7AD09522} = {8AEE0BD1-BFD1-48DC-ADD2-E2FAC6101EE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0A2C3C8-A802-43B5-A68E-F75FBB8D6202}
