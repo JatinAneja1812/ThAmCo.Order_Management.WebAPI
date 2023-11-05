@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace DomainDataObjects.Orders
+﻿namespace DomainDTOs.Order
 {
-    public class OrderItem
+    public class OrderItemDTO
     {
-        public Guid ProductId { get; set; }
+        public string ProductId { get; set; }
         public string ProductName { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }

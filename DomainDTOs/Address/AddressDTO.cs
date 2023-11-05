@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace DomainDataObjects.Orders
+﻿namespace DomainDTOs.Address
 {
-    public class Address
+    public class AddressDTO
     {
-        public Guid AddressID { get; set; }
         public string HouseNumber { get; set; }
         public string Street { get; set; }
         public string City { get; set; }

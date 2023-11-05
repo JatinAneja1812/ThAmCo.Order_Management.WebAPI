@@ -1,6 +1,6 @@
-﻿using DomainDataObjects.Customer;
+﻿using DomainDataObjects.Address;
+using DomainDataObjects.Customer;
 using DomainDataObjects.Orders;
-using DomainDataObjects.OrderStatus;
 using Microsoft.EntityFrameworkCore;
 
 namespace ThAmCo.Orders.DataContext
@@ -19,9 +19,10 @@ namespace ThAmCo.Orders.DataContext
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<ShippingAddress> ShippingAddresses { get; set; }
+        public DbSet<BillingAddress> BillingAddresses { get; set; }
+        public DbSet<HistoricOrder> HistoricOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,11 +32,24 @@ namespace ThAmCo.Orders.DataContext
             modelBuilder.Entity<Order>()
                 .HasKey(o => o.OrderId);
 
-            modelBuilder.Entity<OrderStatus>()
-                .HasKey(os => os.OrderStatusId);
-
             modelBuilder.Entity<OrderItem>()
                 .HasKey(oi => oi.ProductId);
+
+            modelBuilder.Entity<HistoricOrder>()
+               .HasKey(o => o.HistoricOrderId);
+
+            modelBuilder.Entity<ShippingAddress>()
+              .HasKey(ad => ad.ShippingAddressID);
+
+            modelBuilder.Entity<BillingAddress>()
+              .HasKey(ad => ad.BillingAddresssID);
+
+            // Configure the one-to-many relationship between Customer and Order
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)  // Each order has one customer
+                .WithMany(c => c.Orders)  // Each customer can have many orders
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Define the relationship between Order and Shipping Address
             modelBuilder.Entity<Order>()
@@ -49,16 +63,18 @@ namespace ThAmCo.Orders.DataContext
                 .WithMany()
                 .HasForeignKey(o => o.BillingAddressId);
 
-            // Define the one-to-one relationship between Order and Order Status
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Status)
-                .WithOne(os => os.Order)
-                .HasForeignKey<OrderStatus>(os => os.OrderStatusId)
-                .OnDelete(DeleteBehavior.Cascade);
+            // Define the relationship between Order and Shipping Address
+            modelBuilder.Entity<HistoricOrder>()
+                .HasOne(o => o.ShippingAddress)
+                .WithMany()
+                .HasForeignKey(o => o.ShippingAddressId);
 
+            // Define the relationship between Order and Billing Address
+            modelBuilder.Entity<HistoricOrder>()
+                .HasOne(o => o.BillingAddress)
+                .WithMany()
+                .HasForeignKey(o => o.BillingAddressId);
             base.OnModelCreating(modelBuilder);
         }
-
-
     }
 }
