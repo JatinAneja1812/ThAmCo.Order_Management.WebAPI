@@ -1,4 +1,5 @@
-﻿using DomainDTOs.Customer;
+﻿using DomainDTOs.Address;
+using DomainDTOs.Customer;
 using Enums;
 
 namespace DomainDTOs.Order
@@ -15,5 +16,9 @@ namespace DomainDTOs.Order
         public CustomerDTO Customer { get; set; }
         public OrderStatusEnum? Status { get; set; }
         public ICollection<OrderItemDTO> OrderedItems { get; set; }
+        public string ShippingAddressId { get; set; }
+        public AddressDTO ShippingAddress { get; set; }
+        public string BillingAddressId { get; set; }
+        public AddressDTO BillingAddress { get; set; }
     }
 }

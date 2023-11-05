@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DomainDTOs\DomainDTOs.csproj" />
     <ProjectReference Include="..\OrderManagerFileLogger\OrderManagerFileLogger.csproj" />
     <ProjectReference Include="..\Repository.Classes\Repository.Classes.csproj" />
     <ProjectReference Include="..\Repository.Interface\Repository.Interfaces.csproj" />

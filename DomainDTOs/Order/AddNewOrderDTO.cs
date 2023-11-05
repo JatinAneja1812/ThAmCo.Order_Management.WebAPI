@@ -4,7 +4,7 @@ using Enums;
 
 namespace DomainDTOs.Order
 {
-    public class ScheduledOrderDTO
+    public class AddNewOrderDTO
     {
         public string OrderId { get; set; }
         public DateTime OrderCreationDate { get; set; }
@@ -16,9 +16,5 @@ namespace DomainDTOs.Order
         public CustomerDTO Customer { get; set; }
         public OrderStatusEnum? Status { get; set; }
         public ICollection<OrderItemDTO> OrderedItems { get; set; }
-        public string ShippingAddressId { get; set; }
-        public AddressDTO ShippingAddress { get; set; }
-        public string BillingAddressId { get; set; }
-        public AddressDTO BillingAddress { get; set; }
     }
 }
