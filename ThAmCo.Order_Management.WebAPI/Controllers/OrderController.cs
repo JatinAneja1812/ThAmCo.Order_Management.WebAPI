@@ -25,7 +25,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
             return BadRequest();
         }
 
-        // GET: api/Order/GetAllOrders/5
+        // GET: api/Order/GetAllOrders? OrderIDsDTO - List<string> { [ Id1, Id2 ] }
         [HttpGet]
         [Route("GetOrdersById")]
         public ActionResult<List<OrderDTO>> GetOrdersById([FromBody] OrderIDsDTO orderIds)
@@ -33,7 +33,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
             return BadRequest();
         }
 
-        // POST api/Order/AddOrder? OrderDTO
+        // POST api/Order/AddOrder? AddNewOrderDTO
         [HttpPost]
         [Route("AddOrder")]
         public ActionResult<bool> AddNewOrder([FromBody] AddNewOrderDTO order)
@@ -52,7 +52,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         // PUT api/Order/UpdateOrderDelivery? ScheduledOrderDTO
         [HttpPut]
         [Route("UpdateOrderDelivery")]
-        public ActionResult<bool> UpdateExistingOrderWithDelivery([FromBody] OrderDTO order)
+        public ActionResult<bool> UpdateExistingOrderWithDelivery([FromBody] ScheduledOrderDTO order)
         {
             return BadRequest();
         }
