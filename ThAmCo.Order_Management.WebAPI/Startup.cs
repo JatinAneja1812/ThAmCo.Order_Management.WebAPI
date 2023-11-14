@@ -5,6 +5,7 @@ using Repository.Interfaces;
 using Repository.Classes;
 using Service.Interfaces;
 using Service.Classes;
+using FakeData.Customers.Services;
 
 namespace ThAmCo.Order_Management.WebAPI
 {
@@ -13,6 +14,20 @@ namespace ThAmCo.Order_Management.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    }
+                );
+            });
+
             // Configure the database context
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -29,6 +44,7 @@ namespace ThAmCo.Order_Management.WebAPI
             // Add services
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ICustomerReviews, CustomerReviews>();
 
             // Add API endpoint exploration and Swagger
             services.AddEndpointsApiExplorer();
@@ -60,6 +76,7 @@ namespace ThAmCo.Order_Management.WebAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
