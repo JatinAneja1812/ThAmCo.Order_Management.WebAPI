@@ -1,9 +1,7 @@
-﻿using DomainDTOs.Order;
-using FakeData.Customers.ModelDTOs;
-using FakeData.Customers.Services;
+﻿using Enums;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Service.Interfaces;
+using ThAmCo.Order_Management.WebAPI.Fakes.UserReviews;
 
 namespace ThAmCo.Order_Management.WebAPI.Controllers
 {
@@ -11,11 +9,13 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
     [ApiController]
     public class CustomersController : Controller
     {
-        private readonly ICustomerReviews _reviews;
+        private readonly ICustomerReviewsFake _reviews;
+        private readonly ILogger<CustomersController> _logger;
 
-        public CustomersController(ICustomerReviews Reviews)
+        public CustomersController(ICustomerReviewsFake Reviews, ILogger<CustomersController> logger)
         {
             _reviews = Reviews;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -33,9 +33,13 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
 
                 return Ok(JsonConvert.SerializeObject(result));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Server error. Failed to retrive reviews from database.");
+                _logger.LogError(
+                 new EventId((int)LogEventIdEnum.UnknownError),
+                 $"Unexpected exception was caught in CustomersController.\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+
+                return StatusCode(500, "Server error. An unknown error occurred on the server..");
             }
         }
     }

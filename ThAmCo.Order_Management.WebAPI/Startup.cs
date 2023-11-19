@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ThAmCo.Orders.DataContext;
-using Microsoft.Extensions.Configuration;
-using Repository.Interfaces;
 using Repository.Classes;
-using Service.Interfaces;
+using Repository.Interfaces;
 using Service.Classes;
-using FakeData.Customers.Services;
+using Service.Interfaces;
+using ThAmCo.Orders.DataContext;
+using ThAmCo.Order_Management.WebAPI.Fakes.UserReviews;
+using ThAmCo.Order_Management.WebAPI.Fakes.Products;
 
 namespace ThAmCo.Order_Management.WebAPI
 {
@@ -44,7 +44,8 @@ namespace ThAmCo.Order_Management.WebAPI
             // Add services
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<ICustomerReviews, CustomerReviews>();
+            services.AddScoped<ICustomerReviewsFake, CustomerReviewsFake>();
+            services.AddScoped<IProductsFake, ProductsFake>();
 
             // Add API endpoint exploration and Swagger
             services.AddEndpointsApiExplorer();
