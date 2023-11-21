@@ -6,11 +6,20 @@ using Service.Interfaces;
 using ThAmCo.Orders.DataContext;
 using ThAmCo.Order_Management.WebAPI.Fakes.UserReviews;
 using ThAmCo.Order_Management.WebAPI.Fakes.Products;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ThAmCo.Order_Management.WebAPI
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -27,6 +36,19 @@ namespace ThAmCo.Order_Management.WebAPI
                     }
                 );
             });
+
+            // Configure JWT authentication.
+            // 1. Add Authentication Services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://dev-0abv1kli8kyc00rx.us.auth0.com/";
+                options.Audience = "https://thamco_api.example.com";
+            });
+
 
             // Configure the database context
             var configuration = new ConfigurationBuilder()
@@ -79,7 +101,11 @@ namespace ThAmCo.Order_Management.WebAPI
             app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
             app.UseRouting();
+
+            //JWT Bearer authorization
+            app.UseAuthentication();
             app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

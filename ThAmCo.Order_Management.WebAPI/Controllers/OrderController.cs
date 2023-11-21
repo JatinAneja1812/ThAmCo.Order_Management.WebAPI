@@ -1,6 +1,11 @@
-﻿using DomainDTOs.Order;
+﻿using Auth0.ManagementApi;
+using DomainDTOs.Order;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
+using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ThAmCo.Order_Management.WebAPI.Controllers
 {
@@ -18,12 +23,67 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         }
 
         // GET: api/Order/GetAllOrders
+        [Authorize]
         [HttpGet]
         [Route("GetAllOrders")]
-        public ActionResult<List<OrderDTO>> GetAllOrders()
+        public ActionResult<List<OrderDTO>> GetAllOrders([FromHeader] string Authorization) 
         {
             return BadRequest();
         }
+
+        //static bool VerifyToken(string accessToken, string auth0Domain, string audience)
+        //{
+        //    var handler = new JwtSecurityTokenHandler();
+
+        //    // Decode the token
+        //    var jsonToken = handler.ReadToken(accessToken) as JwtSecurityToken;
+
+        //    // Get the issuer from the token's payload
+        //    var issuer = jsonToken.Header.ContainsKey("iss")
+        //        ? jsonToken.Header["iss"].ToString()
+        //        : throw new InvalidOperationException("Issuer not found in token payload");
+
+        //    // Use the default Auth0 JWKS URI
+        //    var defaultJwksUri = $"{issuer}.well-known/jwks.json";
+
+        //    // Fetch the Auth0 JWKS (JSON Web Key Set)
+        //    var jwksResponse = new HttpClient().GetStringAsync(defaultJwksUri).Result;
+
+        //    // Deserialize JWKS response
+        //    var jsonWebKeySet = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonWebKeySet>(jwksResponse);
+
+        //    // Validate the token using the JWKS
+        //    var validationParameters = new TokenValidationParameters
+        //    {
+        //        ValidIssuer = auth0Domain,
+        //        ValidAudience = audience,
+        //        ValidateLifetime = true,
+        //        ClockSkew = TimeSpan.FromMinutes(5), // Adjust as needed
+        //    };
+
+        //    try
+        //    {
+        //        SecurityToken validatedToken;
+        //        var principal = handler.ValidateToken(accessToken, validationParameters, out validatedToken);
+
+        //        // Access claims from the validated token if needed
+        //        // var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return false;
+        //    }
+        //}
+
+
+        public class DiscoveryDocument
+        {
+            public string JwksUri { get; set; }
+            // Add other properties if needed
+        }
+
 
         // GET: api/Order/GetAllOrders? OrderIDsDTO - List<string> { [ Id1, Id2 ] }
         [HttpGet]
