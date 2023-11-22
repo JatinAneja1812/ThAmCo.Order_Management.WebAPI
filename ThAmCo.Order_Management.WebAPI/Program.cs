@@ -1,5 +1,4 @@
 using OrderManagerFileLogger;
-using ThAmCo.Order_Management.WebAPI;
 
 namespace ThAmCo.Order_Management.WebAPI
 {

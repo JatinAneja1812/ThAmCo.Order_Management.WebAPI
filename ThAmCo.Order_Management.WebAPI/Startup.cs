@@ -1,13 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Repository.Classes;
 using Repository.Interfaces;
 using Service.Classes;
 using Service.Interfaces;
-using ThAmCo.Orders.DataContext;
-using ThAmCo.Order_Management.WebAPI.Fakes.UserReviews;
 using ThAmCo.Order_Management.WebAPI.Fakes.Products;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using ThAmCo.Order_Management.WebAPI.Fakes.UserReviews;
+using ThAmCo.Orders.DataContext;
 
 namespace ThAmCo.Order_Management.WebAPI
 {
@@ -38,15 +37,15 @@ namespace ThAmCo.Order_Management.WebAPI
             });
 
             // Configure JWT authentication.
-            // 1. Add Authentication Services
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
             }).AddJwtBearer(options =>
             {
-                options.Authority = "https://dev-0abv1kli8kyc00rx.us.auth0.com/";
-                options.Audience = "https://thamco_api.example.com";
+                options.Authority = _configuration["Jwt:Authority"];
+                options.Audience = _configuration["Jwt:Audience"];
             });
 
 
@@ -105,7 +104,7 @@ namespace ThAmCo.Order_Management.WebAPI
             //JWT Bearer authorization
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
