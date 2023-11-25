@@ -65,8 +65,6 @@ namespace ThAmCo.Order_Management.WebAPI
             // Add services
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<ICustomerReviewsFake, CustomerReviewsFake>();
-            services.AddScoped<IProductsFake, ProductsFake>();
 
             // Add API endpoint exploration and Swagger
             services.AddEndpointsApiExplorer();

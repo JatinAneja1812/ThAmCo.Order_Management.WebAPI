@@ -1,11 +1,7 @@
-﻿using Auth0.ManagementApi;
-using DomainDTOs.Order;
+﻿using DomainDTOs.Order;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Service.Interfaces;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace ThAmCo.Order_Management.WebAPI.Controllers
 {
@@ -26,7 +22,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         [Authorize]
         [HttpGet]
         [Route("GetAllOrders")]
-        public ActionResult<List<OrderDTO>> GetAllOrders([FromHeader] string Authorization) 
+        public ActionResult<List<OrderDTO>> GetAllOrders([FromHeader] string Authorization)
         {
             return BadRequest();
         }
@@ -66,7 +62,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         // PUT api/Order/UpdateOrderStatus? OrderDTO
         [HttpPut]
         [Route("UpdateOrderStatus")]
-        public ActionResult<bool> UpdateOrderStatus([FromBody] OrderStatusDTO order )
+        public ActionResult<bool> UpdateOrderStatus([FromBody] OrderStatusDTO order)
         {
             return BadRequest();
         }
