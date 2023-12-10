@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Repository.Classes;
 using Repository.Interfaces;
 using Service.Classes;
 using Service.Interfaces;
-using ThAmCo.Order_Management.WebAPI.Fakes.Products;
-using ThAmCo.Order_Management.WebAPI.Fakes.UserReviews;
 using ThAmCo.Orders.DataContext;
+using ThAmCo.Profiles.Mapper;
 
 namespace ThAmCo.Order_Management.WebAPI
 {
@@ -59,12 +59,16 @@ namespace ThAmCo.Order_Management.WebAPI
             services.AddDbContext<OrdersContext>(options =>
                 options.UseSqlServer(connectionString));
 
+
+            services.AddAutoMapper(cfg => cfg.AddProfile<OrderProfile>());
+
             // Add controllers
             services.AddControllers();
 
             // Add services
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IGuidUtility, GuidUtility>();
 
             // Add API endpoint exploration and Swagger
             services.AddEndpointsApiExplorer();

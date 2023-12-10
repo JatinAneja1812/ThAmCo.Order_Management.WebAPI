@@ -1,4 +1,6 @@
 ﻿using DomainDTOs.Order;
+using Enums;
+using Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -19,29 +21,119 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         }
 
         // GET: api/Order/GetAllOrders
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("GetAllOrders")]
-        public ActionResult<List<OrderDTO>> GetAllOrders([FromHeader] string Authorization)
+        public ActionResult<List<OrderDTO>> GetAllOrders()
         {
-            return BadRequest();
+            try
+            {
+                List<OrderDTO> result = _orderService.GetAllOrders();
+
+                if (result == null)
+                {
+                    return StatusCode(500,
+                        "Failed to retrieve all orders details from the database. If this error presists contact administrator");
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                 new EventId((int)LogEventIdEnum.UnknownError),
+                 $"Unexpected exception was caught in OrderController at GetAllOrders() .\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+
+                return StatusCode(500, "Server error. An unknown error occurred on the server..");
+            }
         }
 
         // GET: api/Order/GetAllOrders? OrderIDsDTO - List<string> { [ Id1, Id2 ] }
+       // [Authorize]
         [HttpGet]
         [Route("GetOrdersById")]
-        public ActionResult<List<OrderDTO>> GetOrdersById([FromBody] OrderIDsDTO orderIds)
+        public ActionResult<List<OrderDTO>> GetOrdersById([FromHeader] string orderIds)
+        {
+            try
+            {
+                List<OrderDTO> result = _orderService.GetOrdersById(orderIds);
+
+                if (result == null)
+                {
+                    return StatusCode(500,
+                       $"Failed to retrieve specific order details with order id {orderIds} from the database. If this error presists contact administrator");
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                 new EventId((int)LogEventIdEnum.UnknownError),
+                 $"Unexpected exception was caught in OrderController at GetOrdersById() .\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+
+                return StatusCode(500, "Server error. An unknown error occurred on the server..");
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAllOrdersCount")]
+        public ActionResult<bool> GetAllOrdersCount()
         {
             return BadRequest();
         }
 
         // POST api/Order/AddOrder? AddNewOrderDTO
+        //[Authorize]
         [HttpPost]
-        [Route("AddOrder")]
-        public ActionResult<bool> AddNewOrder([FromBody] AddNewOrderDTO order)
+        [Route("AddOrderByStaff")]
+        public ActionResult<bool> AddNewOrder(AddNewOrderDTO order)
+        {
+            try
+            {
+                bool result = _orderService.AddNewOrderByStaff(order);
+
+                if (!result)
+                {
+                    return StatusCode(500,
+                        "Failed to add new order to the database. If this error presists contact administrator");
+                }
+
+                return Ok(result);
+            }
+            catch (OrderExistsException)
+            {
+                return StatusCode(400, "User already exists in the database. Try again with different values.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                 new EventId((int)LogEventIdEnum.UnknownError),
+                 $"Unexpected exception was caught in OrderController at AddNewOrder() .\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+
+                return StatusCode(500, "Server error. An unknown error occurred on the server..");
+            }
+        }
+
+        // PATCH api/Order/UpdateOrderStatus? OrderDTO
+        [HttpPatch]
+        [Route("UpdateOrderStatus")]
+        public ActionResult<bool> UpdateOrderStatus([FromBody] OrderStatusDTO order)
         {
             return BadRequest();
         }
+
+        // DELETE api/<OrderController>/5
+        [HttpDelete]
+        [Route("CancelOrder")]
+        public ActionResult<bool> Delete([FromBody] OrderIDsDTO orderIds)
+        {
+            return BadRequest();
+        }
+
+
+
+
 
         // PUT api/Order/UpdateExistingOrder? OrderDTO
         [HttpPut]
@@ -59,20 +151,6 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
             return BadRequest();
         }
 
-        // PUT api/Order/UpdateOrderStatus? OrderDTO
-        [HttpPut]
-        [Route("UpdateOrderStatus")]
-        public ActionResult<bool> UpdateOrderStatus([FromBody] OrderStatusDTO order)
-        {
-            return BadRequest();
-        }
 
-        // DELETE api/<OrderController>/5
-        [HttpDelete]
-        [Route("CancelOrder")]
-        public ActionResult<bool> Delete([FromBody] OrderIDsDTO orderIds)
-        {
-            return BadRequest();
-        }
     }
 }

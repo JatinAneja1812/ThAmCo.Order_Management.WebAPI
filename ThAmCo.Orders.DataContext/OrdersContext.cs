@@ -19,10 +19,9 @@ namespace ThAmCo.Orders.DataContext
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ShippingAddress> ShippingAddresses { get; set; }
         public DbSet<BillingAddress> BillingAddresses { get; set; }
-        public DbSet<HistoricOrder> HistoricOrders { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,25 +31,12 @@ namespace ThAmCo.Orders.DataContext
             modelBuilder.Entity<Order>()
                 .HasKey(o => o.OrderId);
 
-            modelBuilder.Entity<OrderItem>()
-                .HasKey(oi => oi.ProductId);
-
-            modelBuilder.Entity<HistoricOrder>()
-               .HasKey(o => o.HistoricOrderId);
-
             modelBuilder.Entity<ShippingAddress>()
               .HasKey(ad => ad.ShippingAddressID);
 
             modelBuilder.Entity<BillingAddress>()
               .HasKey(ad => ad.BillingAddresssID);
 
-            // Configure the one-to-many relationship between Customer and Order
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.Customer)  // Each order has one customer
-                .WithMany(c => c.Orders)  // Each customer can have many orders
-                .HasForeignKey(o => o.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             // Define the relationship between Order and Shipping Address
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.ShippingAddress)
@@ -59,22 +45,19 @@ namespace ThAmCo.Orders.DataContext
 
             // Define the relationship between Order and Billing Address
             modelBuilder.Entity<Order>()
-                .HasOne(o => o.BillingAddress)
-                .WithMany()
-                .HasForeignKey(o => o.BillingAddressId);
+                 .HasOne(o => o.BillingAddress)
+                 .WithMany()
+                 .OnDelete(DeleteBehavior.ClientSetNull); // Add this line to handle deletion behavior if necessary;
 
-            // Define the relationship between Order and Shipping Address
-            modelBuilder.Entity<HistoricOrder>()
-                .HasOne(o => o.ShippingAddress)
-                .WithMany()
-                .HasForeignKey(o => o.ShippingAddressId);
+            // Define the many-to-many relationship between Order and OrderItem
+            modelBuilder.Entity<OrderItem>()
+                .HasKey(oi => oi.OrderItemId); // Assuming OrderItemId is the primary key for OrderItem
 
-            // Define the relationship between Order and Billing Address
-            modelBuilder.Entity<HistoricOrder>()
-                .HasOne(o => o.BillingAddress)
-                .WithMany()
-                .HasForeignKey(o => o.BillingAddressId);
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.OrderedItems)
+                .WithMany(oi => oi.Orders)
+                .UsingEntity(j => j.ToTable("OrderOrderItem"));
+
         }
     }
 }
