@@ -180,7 +180,27 @@ namespace Repositories.Classes
             {
                 _logger.LogError(
                    new EventId((int)LogEventIdEnum.GetFailed),
-                   $"Failed to retrive orders count from the database. Error occurred in Order Repository at GetOrdersCountFromDatabase(...) with the following message and stack trace: " +
+                   $"Failed to remove orders from the database. Error occurred in Order Repository at DeleteOrderFromDatabase(...) with the following message and stack trace: " +
+                   $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
+                  );
+
+                return -1;
+            }
+        }
+
+        public int UpdateOrderToDatabase(Order orderToUpdate)
+        {
+            try
+            {
+                _context.Orders.Update(orderToUpdate);
+                _context.ChangeTracker.DetectChanges();
+                return _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                   new EventId((int)LogEventIdEnum.GetFailed),
+                   $"Failed to update orders to the database. Error occurred in Order Repository at UpdateOrderToDatabase(...) with the following message and stack trace: " +
                    $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
                   );
 

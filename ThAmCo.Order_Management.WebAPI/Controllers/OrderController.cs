@@ -1,4 +1,5 @@
 ﻿using DomainDTOs.Order;
+using DomainObjects.Orders;
 using Enums;
 using Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -134,15 +135,6 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
             }
         }
 
-        // PATCH api/Order/UpdateOrderStatus? OrderDTO
-        //[Authorize]
-        [HttpPatch]
-        [Route("UpdateOrderStatus")]
-        public ActionResult<bool> UpdateOrderStatus([FromBody] OrderStatusDTO order)
-        {
-            return BadRequest();
-        }
-
         // DELETE api/<OrderController>/5
         //  [Authorize]
         [HttpDelete]
@@ -156,7 +148,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
                 if (!result)
                 {
                     return StatusCode(500,
-                        "Failed to remove existing user from the database. If this error presists contact administrator.");
+                        "Failed to remove existing order from the database. If this error presists contact administrator.");
                 }
 
                 return Ok(result);
@@ -169,7 +161,71 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
             {
                 _logger.LogError(
                  new EventId((int)LogEventIdEnum.UnknownError),
-                 $"Unexpected exception was caught in UserProfilesController at RemoveExistingUser() .\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+                 $"Unexpected exception was caught in OrderController at DeletOrder() .\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+
+                return StatusCode(500, "Server error. An unknown error occurred on the server..");
+            }
+        }
+
+        // PATCH api/Order/UpdateOrderStatus? OrderDTO
+        //[Authorize]
+        [HttpPatch]
+        [Route("UpdateOrderStatus")]
+        public ActionResult<bool> UpdateOrderStatus([FromBody] OrderStatusDTO order)
+        {
+            try
+            {
+                bool result = _orderService.UpdateOrderStatus(order.OrderId, order.OrderStatus);
+
+                if (!result)
+                {
+                    return StatusCode(500,
+                        "Failed to update order status to the database. If this error presists contact administrator.");
+                }
+
+                return Ok(result);
+            }
+            catch (DataNotFoundException)
+            {
+                return StatusCode(400, "Order selected to update does not exists in the database.Try to refresh your browser.If this error presists contact administrator.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                 new EventId((int)LogEventIdEnum.UnknownError),
+                 $"Unexpected exception was caught in OrderController at RemoveExistingUser() .\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
+
+                return StatusCode(500, "Server error. An unknown error occurred on the server..");
+            }
+        }
+
+        // PATCH api/Order/UpdateOrderStatus? OrderDTO
+        //[Authorize]
+        [HttpPatch]
+        [Route("UpdateOrderDeliveryDate")]
+        public ActionResult<bool> UpdateOrderDeliveryDate([FromBody] ScheduledOrderDTO order)
+        {
+            try
+            {
+                bool result = _orderService.UpdateOrderDeliveryDate(order.OrderId, order.DeliveryDate);
+
+                if (!result)
+                {
+                    return StatusCode(500,
+                        "Failed to update order scheduled delivery date to the database. If this error presists contact administrator.");
+                }
+
+                return Ok(result);
+            }
+            catch (DataNotFoundException)
+            {
+                return StatusCode(400, "Order selected to update does not exists in the database.Try to refresh your browser.If this error presists contact administrator.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                 new EventId((int)LogEventIdEnum.UnknownError),
+                 $"Unexpected exception was caught in OrderController at UpdateOrderDeliveryDate() .\nException:\n{ex.Message}\nInner exception:\n{ex.InnerException}\nStack trace:\n{ex.StackTrace}");
 
                 return StatusCode(500, "Server error. An unknown error occurred on the server..");
             }
