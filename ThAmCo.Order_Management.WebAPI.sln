@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCo.Order.Application", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderManagerFileLogger", "OrderManagerFileLogger\OrderManagerFileLogger.csproj", "{0503A6D6-4676-4C05-996B-B4F32F4E2DD3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCo.Order_Management.XUnitTests", "ThAmCo.Order_Management.XUnitTests", "{63A4673C-0DE6-486C-84ED-B7FE4104912E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThAmCo.Order_Management", "ThAmCo.Order_Management", "{63A4673C-0DE6-486C-84ED-B7FE4104912E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{1034DDFC-21C3-49AE-BB94-8B380EBADB47}"
 EndProject
