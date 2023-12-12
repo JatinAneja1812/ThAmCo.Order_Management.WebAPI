@@ -32,6 +32,7 @@ namespace DomainDataObjects.Orders
         }
         public string CustomerId { get; set; }
         public bool IsArchived { get; set; }
+        public bool IsDeleted { get; set; }
         public DomainDataObjects.Customer.Customer Customer { get; set; }
         public string? ShippingAddressId { get; set; }
         public DomainDataObjects.Address.ShippingAddress? ShippingAddress { get; set; }

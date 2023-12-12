@@ -10,8 +10,6 @@ using Exceptions;
 using Microsoft.Extensions.Logging;
 using Repository.Interfaces;
 using Service.Interfaces;
-using System.Collections.Generic;
-using System.Net.Sockets;
 
 namespace Service.Classes
 {
@@ -33,7 +31,7 @@ namespace Service.Classes
         public bool AddNewOrderByStaff(AddNewOrderDTO orderDTO)
         {
             try
-            {   
+            {
                 // Revert this
                 orderDTO.BillingAddress = new CompanyDetailsDTO
                 {
@@ -55,7 +53,7 @@ namespace Service.Classes
                 {
                     throw new RequiredInformationMissingException();
                 }
-                
+
                 Customer customer = _mapper.Map<CustomerDTO, Customer>(orderDTO.Customer);
                 newOrder.Customer = customer;
                 newOrder.CustomerId = orderDTO.CustomerId;
@@ -131,14 +129,79 @@ namespace Service.Classes
             }
         }
 
-        public List<OrderDTO> GetOrdersById(string orderId)
+        public List<OrderDTO> GetAllHistoricOrders()
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Order> allOrders = _orderRepository.GetAllHistoricOrdersFromDatabase();
+
+                if (allOrders == null) // no user found
+                {
+                    return new List<OrderDTO>();
+                }
+
+                List<OrderDTO> ordersDTOs = _mapper.Map<List<Order>, List<OrderDTO>>(allOrders);
+
+                return ordersDTOs;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(new EventId((int)LogEventIdEnum.GetFailed), $"Failed to retrieve all historic orders from the database. \nError occured in Orders Service at GetAllHistoricOrders(...) with following error message and stack trace." +
+                 $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}");
+
+                throw;
+            }
         }
+
+        public int GetAllOrdersCount()
+        {
+            try
+            {
+                int ordersCount = _orderRepository.GetOrdersCountFromDatabase();
+
+                if (ordersCount == -1) // no orders found
+                {
+                    return -1;
+                }
+
+                return ordersCount;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(new EventId((int)LogEventIdEnum.GetFailed), $"Failed to retrieve all ordeers count from the database. \nError occured in Orders Service at GetAllOrders(...) with following error message and stack trace." +
+                 $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}");
+
+                throw;
+            }
+        }
+
 
         public bool UpdateOrderStatus(string orderID, OrderStatusEnum orderStatus)
         {
             throw new NotImplementedException();
+        }
+
+        public bool DeleteOrder(string orderId)
+        {
+            try
+            {
+                Order existsingUser = _orderRepository.GetOrderByIdFromDatabase(orderId) ?? throw new DataNotFoundException();
+
+                int didRemove = _orderRepository.DeleteOrderFromDatabase(existsingUser);
+
+                return didRemove > 0;
+            }
+            catch (DataNotFoundException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(new EventId((int)LogEventIdEnum.InsertFailed), $"Failed to delete existing order from the database. \nError occured in User Service at DeleteOrder(...) with following error message and stack trace." +
+                 $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}");
+
+                return false;
+            }
         }
     }
 }

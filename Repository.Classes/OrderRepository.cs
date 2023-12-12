@@ -66,6 +66,7 @@ namespace Repository.Classes
                                         .Include(m => m.Customer)
                                         .Include(m => m.ShippingAddress)
                                         .Include(m => m.BillingAddress)
+                                        .Where(order => order.IsArchived == false && order.IsDeleted == false)
                                         .ToList();
                 return orderList;
             }
@@ -74,6 +75,55 @@ namespace Repository.Classes
                 _logger.LogError(
                    new EventId((int)LogEventIdEnum.GetFailed),
                    $"Failed to retrive orders list from the database. Error occurred in Order Repository at GetAllOrdersFromDatabase(...) with the following message and stack trace: " +
+                   $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
+                  );
+
+                return null;
+            }
+        }
+
+        public Order GetOrderByIdFromDatabase(string orderId)
+        {
+            try
+            {
+                Order order = _context.Orders
+                                    .Include(m => m.OrderedItems)
+                                    .Include(m => m.Customer)
+                                    .Include(m => m.ShippingAddress)
+                                    .Include(m => m.BillingAddress)
+                                    .Where(order => order.OrderId == orderId)
+                                    .First();
+                return order;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                   new EventId((int)LogEventIdEnum.GetFailed),
+                   $"Failed to retrive order with order id {orderId} from the database. Error occurred in Order Repository at GetOrderByIdFromDatabase(...) with the following message and stack trace: " +
+                   $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
+                  );
+
+                return null;
+            }
+        }
+        public List<Order> GetAllHistoricOrdersFromDatabase()
+        {
+            try
+            {
+                List<Order> orderList = _context.Orders
+                                        .Include(m => m.OrderedItems)
+                                        .Include(m => m.Customer)
+                                        .Include(m => m.ShippingAddress)
+                                        .Include(m => m.BillingAddress)
+                                        .Where(order => order.IsArchived == true && order.IsDeleted == false)
+                                        .ToList();
+                return orderList;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                   new EventId((int)LogEventIdEnum.GetFailed),
+                   $"Failed to retrive all historic orders list from the database. Error occurred in Order Repository at GetAllHistoricOrdersFromDatabase(...) with the following message and stack trace: " +
                    $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
                   );
 
@@ -91,7 +141,7 @@ namespace Repository.Classes
             {
                 _logger.LogError(
                    new EventId((int)LogEventIdEnum.GetFailed),
-                   $"Failed to retrive billing address from the database. Error occurred in Order Repository at GetAllOrdersFromDatabase(...) with the following message and stack trace: " +
+                   $"Failed to retrive billing address from the database. Error occurred in Order Repository at GetBillingAddressByCriteria(...) with the following message and stack trace: " +
                    $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
                   );
 
@@ -99,28 +149,43 @@ namespace Repository.Classes
             }
         }
 
-        public Order GetOrderByIDFromDatabase(string orderId)
+        public int GetOrdersCountFromDatabase()
         {
             try
             {
-                Order order = _context.Orders
-                                    .Where(c => c.OrderId == orderId)
-                                    .Include(m => m.OrderedItems)
-                                    .Include(m => m.Customer)
-                                    .Include(m => m.ShippingAddressId)
-                                    .Include(m => m.BillingAddress).First();
-
-                return order;
+                return _context.Orders.Where(o => o.IsArchived == false && o.IsDeleted == false).ToList().Count;
             }
             catch (Exception ex)
             {
                 _logger.LogError(
                    new EventId((int)LogEventIdEnum.GetFailed),
-                   $"Failed to order with and orderId: {orderId} from the database. Error occurred in Order Repository at GetOrderByIDFromDatabase(...) with the following message and stack trace: " +
+                   $"Failed to retrive orders count from the database. Error occurred in Order Repository at GetOrdersCountFromDatabase(...) with the following message and stack trace: " +
                    $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
                   );
 
-                return null;
+                return -1;
+            }
+        }
+
+        public int DeleteOrderFromDatabase(Order orderToDelete)
+        {
+            try
+            {
+                // SoftDelete
+                orderToDelete.IsDeleted = true;
+                _context.Orders.Update(orderToDelete);
+                _context.ChangeTracker.DetectChanges();
+                return _context.SaveChanges(); 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                   new EventId((int)LogEventIdEnum.GetFailed),
+                   $"Failed to retrive orders count from the database. Error occurred in Order Repository at GetOrdersCountFromDatabase(...) with the following message and stack trace: " +
+                   $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
+                  );
+
+                return -1;
             }
         }
     }
