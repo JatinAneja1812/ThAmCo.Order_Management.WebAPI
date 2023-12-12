@@ -1,5 +1,6 @@
 ﻿using DomainDTOs.Address;
 using DomainDTOs.Customer;
+using Enums;
 
 namespace DomainDTOs.Order
 {

@@ -1,9 +1,8 @@
 ﻿using DomainDTOs.Order;
 using Enums;
 using Exceptions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Service.Interfaces;
+using Services.Interfaces;
 
 namespace ThAmCo.Order_Management.WebAPI.Controllers
 {

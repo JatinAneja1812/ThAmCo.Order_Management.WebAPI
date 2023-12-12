@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using DataContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Repository.Classes;
-using Repository.Interfaces;
-using Service.Classes;
-using Service.Interfaces;
-using ThAmCo.Orders.DataContext;
+using Repositories.Classes;
+using Repositories.Interfaces;
+using Services.Classes;
+using Services.Interfaces;
 using ThAmCo.Profiles.Mapper;
 
 namespace ThAmCo.Order_Management.WebAPI
