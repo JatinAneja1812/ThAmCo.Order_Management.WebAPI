@@ -1,18 +1,54 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ThAmCo.Orders.DataContext;
-using Microsoft.Extensions.Configuration;
-using Repository.Interfaces;
-using Repository.Classes;
-using Service.Interfaces;
-using Service.Classes;
+﻿using AutoMapper;
+using DataContext;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Repositories.Classes;
+using Repositories.Interfaces;
+using Services.Classes;
+using Services.Interfaces;
+using ThAmCo.Profiles.Mapper;
 
 namespace ThAmCo.Order_Management.WebAPI
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    }
+                );
+            });
+
+            // Configure JWT authentication.
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = _configuration["Jwt:Authority"];
+                options.Audience = _configuration["Jwt:Audience"];
+            });
+
+
             // Configure the database context
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -23,12 +59,16 @@ namespace ThAmCo.Order_Management.WebAPI
             services.AddDbContext<OrdersContext>(options =>
                 options.UseSqlServer(connectionString));
 
+
+            services.AddAutoMapper(cfg => cfg.AddProfile<OrderProfile>());
+
             // Add controllers
             services.AddControllers();
 
             // Add services
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IGuidUtility, GuidUtility>();
 
             // Add API endpoint exploration and Swagger
             services.AddEndpointsApiExplorer();
@@ -60,8 +100,13 @@ namespace ThAmCo.Order_Management.WebAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("CorsPolicy");
             app.UseRouting();
+
+            //JWT Bearer authorization
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
