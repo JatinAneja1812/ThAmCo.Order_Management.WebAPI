@@ -1,4 +1,5 @@
 ﻿using DomainObjects.Address;
+using DomainObjects.Customer;
 using DomainObjects.Orders;
 
 namespace Repositories.Interfaces
@@ -12,6 +13,8 @@ namespace Repositories.Interfaces
         public int AddNewOrderToDatabase(Order orderToAdd);
         public BillingAddress GetBillingAddressByCriteria(BillingAddress billingAddress);
         public int AddBillingAddressToDatabase(BillingAddress billingAddress);
+        public Customer GetCustomerById(string customerId);
+        public int AddCustomerToDatabase(Customer customer);
         public int DeleteOrderFromDatabase(Order orderToDelete);
         public int UpdateOrderToDatabase(Order orderToDelete);
     }

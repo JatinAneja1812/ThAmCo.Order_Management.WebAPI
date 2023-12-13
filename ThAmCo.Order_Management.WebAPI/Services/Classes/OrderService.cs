@@ -53,9 +53,28 @@ namespace Services.Classes
                     throw new RequiredInformationMissingException();
                 }
 
-                Customer customer = _mapper.Map<CustomerDTO, Customer>(orderDTO.Customer);
-                newOrder.Customer = customer;
-                newOrder.CustomerId = orderDTO.CustomerId;
+                // Check if the customer already exists by ID
+                Customer existingCustomer = _orderRepository.GetCustomerById(orderDTO.Customer.CustomerId);
+
+                if (existingCustomer != null)
+                {
+                    // Customer already exists, reuse it
+                    newOrder.Customer = existingCustomer;
+                    newOrder.CustomerId = existingCustomer.CustomerId;
+                }
+                else
+                {
+                    // Customer does not exist, create a new one
+                    Customer newCustomer = _mapper.Map<CustomerDTO, Customer>(orderDTO.Customer);
+                    newCustomer.CustomerId = orderDTO.Customer.CustomerId;
+
+                    // Save the new customer to the database
+                    _orderRepository.AddCustomerToDatabase(newCustomer);
+
+                    newOrder.Customer = newCustomer;
+                    newOrder.CustomerId = newCustomer.CustomerId;
+                }
+
 
                 ShippingAddress customerAddress = _mapper.Map<AddressDTO, ShippingAddress>(orderDTO.Address);
                 newOrder.ShippingAddress = customerAddress;
