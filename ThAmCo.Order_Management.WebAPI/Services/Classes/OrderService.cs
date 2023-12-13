@@ -53,9 +53,28 @@ namespace Services.Classes
                     throw new RequiredInformationMissingException();
                 }
 
-                Customer customer = _mapper.Map<CustomerDTO, Customer>(orderDTO.Customer);
-                newOrder.Customer = customer;
-                newOrder.CustomerId = orderDTO.CustomerId;
+                // Check if the customer already exists by ID
+                Customer existingCustomer = _orderRepository.GetCustomerById(orderDTO.Customer.CustomerId);
+
+                if (existingCustomer != null)
+                {
+                    // Customer already exists, reuse it
+                    newOrder.Customer = existingCustomer;
+                    newOrder.CustomerId = existingCustomer.CustomerId;
+                }
+                else
+                {
+                    // Customer does not exist, create a new one
+                    Customer newCustomer = _mapper.Map<CustomerDTO, Customer>(orderDTO.Customer);
+                    newCustomer.CustomerId = orderDTO.Customer.CustomerId;
+
+                    // Save the new customer to the database
+                    _orderRepository.AddCustomerToDatabase(newCustomer);
+
+                    newOrder.Customer = newCustomer;
+                    newOrder.CustomerId = newCustomer.CustomerId;
+                }
+
 
                 ShippingAddress customerAddress = _mapper.Map<AddressDTO, ShippingAddress>(orderDTO.Address);
                 newOrder.ShippingAddress = customerAddress;
@@ -174,12 +193,6 @@ namespace Services.Classes
             }
         }
 
-
-        public bool UpdateOrderStatus(string orderID, OrderStatusEnum orderStatus)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool DeleteOrder(string orderId)
         {
             try
@@ -196,7 +209,62 @@ namespace Services.Classes
             }
             catch (Exception ex)
             {
-                _logger.LogError(new EventId((int)LogEventIdEnum.InsertFailed), $"Failed to delete existing order from the database. \nError occured in User Service at DeleteOrder(...) with following error message and stack trace." +
+                _logger.LogError(new EventId((int)LogEventIdEnum.InsertFailed), $"Failed to delete existing order from the database. \nError occured in Orders Service at DeleteOrder(...) with following error message and stack trace." +
+                 $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}");
+
+                return false;
+            }
+        }
+
+        public bool UpdateOrderStatus(string orderId, OrderStatusEnum orderStatus)
+        {
+            try
+            {
+                Order existsingOrder = _orderRepository.GetOrderByIdFromDatabase(orderId) ?? throw new DataNotFoundException();
+
+                if(orderStatus == OrderStatusEnum.Delivered)
+                {
+                    existsingOrder.IsArchived = true;
+                }
+
+                existsingOrder.Status = orderStatus;
+
+                int didRemove = _orderRepository.UpdateOrderToDatabase(existsingOrder);
+
+                return didRemove > 0;
+            }
+            catch (DataNotFoundException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(new EventId((int)LogEventIdEnum.UpdateFailed), $"Failed to update order status to the database. \nError occured in Order Service at UpdateOrderStatus(...) with following error message and stack trace." +
+                 $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}");
+
+                return false;
+            }
+        }
+
+        public bool UpdateOrderDeliveryDate(string orderId, DateTime scheduledDeliveryDate)
+        {
+            try
+            {
+                Order existsingOrder = _orderRepository.GetOrderByIdFromDatabase(orderId) ?? throw new DataNotFoundException();
+
+                existsingOrder.DeliveredDate = scheduledDeliveryDate;
+
+                int didRemove = _orderRepository.UpdateOrderToDatabase(existsingOrder);
+
+                return didRemove > 0;
+            }
+            catch (DataNotFoundException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(new EventId((int)LogEventIdEnum.UpdateFailed), $"Failed to update order delivery date to the database. \nError occured in Order Service at UpdateOrderDeliveryDate(...) with following error message and stack trace." +
                  $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}");
 
                 return false;

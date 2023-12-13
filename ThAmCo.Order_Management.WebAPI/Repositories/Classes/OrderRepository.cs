@@ -1,7 +1,9 @@
 ﻿using DataContext;
 using DomainObjects.Address;
+using DomainObjects.Customer;
 using DomainObjects.Orders;
 using Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 
@@ -148,6 +150,43 @@ namespace Repositories.Classes
             }
         }
 
+        public Customer GetCustomerById(string customerId)
+        {
+            try
+            {
+                return _context.Customers.Where(m => m.CustomerId == customerId).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                   new EventId((int)LogEventIdEnum.GetFailed),
+                   $"Failed to retrive customer from the database. Error occurred in Order Repository at GetCustomerById(...) with the following message and stack trace: " +
+                   $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
+                  );
+
+                return null;
+            }
+        }
+
+        public int AddCustomerToDatabase(Customer customer)
+        {
+            try
+            {
+                _context.Customers.Add(customer);
+                return _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                   new EventId((int)LogEventIdEnum.InsertFailed),
+                   $"Failed to add customer data to the database. Error occurred in Order Repository at AddCustomerToDatabase(...) with the following message and stack trace: " +
+                   $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
+                  );
+
+                return -1;
+            }
+        }
+
         public int GetOrdersCountFromDatabase()
         {
             try
@@ -180,7 +219,27 @@ namespace Repositories.Classes
             {
                 _logger.LogError(
                    new EventId((int)LogEventIdEnum.GetFailed),
-                   $"Failed to retrive orders count from the database. Error occurred in Order Repository at GetOrdersCountFromDatabase(...) with the following message and stack trace: " +
+                   $"Failed to remove orders from the database. Error occurred in Order Repository at DeleteOrderFromDatabase(...) with the following message and stack trace: " +
+                   $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
+                  );
+
+                return -1;
+            }
+        }
+
+        public int UpdateOrderToDatabase(Order orderToUpdate)
+        {
+            try
+            {
+                _context.Orders.Update(orderToUpdate);
+                _context.ChangeTracker.DetectChanges();
+                return _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                   new EventId((int)LogEventIdEnum.GetFailed),
+                   $"Failed to update orders to the database. Error occurred in Order Repository at UpdateOrderToDatabase(...) with the following message and stack trace: " +
                    $"{ex.Message}\n{ex.StackTrace}\nInner exception: {(ex.InnerException != null ? ex.InnerException.Message + "\n" + ex.InnerException.StackTrace : "None")}"
                   );
 
