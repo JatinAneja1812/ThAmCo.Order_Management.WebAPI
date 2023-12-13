@@ -17,10 +17,10 @@ namespace DataContext
             this.ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<ShippingAddress> ShippingAddresses { get; set; }
-        public DbSet<BillingAddress> BillingAddresses { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<ShippingAddress> ShippingAddresses { get; set; }
+        public virtual DbSet<BillingAddress> BillingAddresses { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

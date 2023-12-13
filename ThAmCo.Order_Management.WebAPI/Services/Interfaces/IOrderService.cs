@@ -1,7 +1,7 @@
 ﻿using DomainDTOs.Order;
 using Enums;
 
-namespace Services.Interfaces
+namespace ThAmCo.Order_Management.WebAPI.Services.Interfaces
 {
     public interface IOrderService
     {
