@@ -3,11 +3,10 @@ using DomainObjects.Address;
 using DomainObjects.Customer;
 using DomainObjects.Orders;
 using Enums;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Repositories.Interfaces;
+using ThAmCo.Order_Management.WebAPI.Repositories.Interfaces;
 
-namespace Repositories.Classes
+namespace ThAmCo.Order_Management.WebAPI.Repositories.Classes
 {
     public class OrderRepository : IOrderRepository
     {

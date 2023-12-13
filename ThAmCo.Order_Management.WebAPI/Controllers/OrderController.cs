@@ -3,7 +3,7 @@ using Enums;
 using Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
+using ThAmCo.Order_Management.WebAPI.Services.Interfaces;
 
 namespace ThAmCo.Order_Management.WebAPI.Controllers
 {
