@@ -1,7 +1,7 @@
 ﻿using DomainDTOs.Order;
-using DomainObjects.Orders;
 using Enums;
 using Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
@@ -21,7 +21,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         }
 
         // GET: api/Order/GetAllOrders
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [Route("GetAllOrders")]
         public ActionResult<List<OrderDTO>> GetAllOrders()
@@ -49,7 +49,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         }
 
         // GET: api/Order/GetAllOrders
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [Route("GetAllHistoricOrders")]
         public ActionResult<List<OrderDTO>> GetAllHistoricOrders()
@@ -76,7 +76,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
             }
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [Route("GetAllOrdersCount")]
         public ActionResult<int> GetAllOrdersCount()
@@ -104,7 +104,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         }
 
         // POST api/Order/AddOrder? AddNewOrderDTO
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [Route("AddOrderByStaff")]
         public ActionResult<bool> AddNewOrder(AddNewOrderDTO order)
@@ -136,7 +136,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         }
 
         // DELETE api/<OrderController>/5
-        //  [Authorize]
+        [Authorize]
         [HttpDelete]
         [Route("CancelOrder")]
         public ActionResult<bool> DeletOrder([FromHeader] string OrderId)
@@ -168,7 +168,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         }
 
         // PATCH api/Order/UpdateOrderStatus? OrderDTO
-        //[Authorize]
+        [Authorize]
         [HttpPatch]
         [Route("UpdateOrderStatus")]
         public ActionResult<bool> UpdateOrderStatus([FromBody] OrderStatusDTO order)
@@ -200,7 +200,7 @@ namespace ThAmCo.Order_Management.WebAPI.Controllers
         }
 
         // PATCH api/Order/UpdateOrderStatus? OrderDTO
-        //[Authorize]
+        [Authorize]
         [HttpPatch]
         [Route("UpdateOrderDeliveryDate")]
         public ActionResult<bool> UpdateOrderDeliveryDate([FromBody] ScheduledOrderDTO order)
