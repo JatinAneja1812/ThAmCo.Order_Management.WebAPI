@@ -13,7 +13,9 @@ namespace Services.Interfaces
 
         public bool AddNewOrderByStaff(AddNewOrderDTO orderDTO);
 
-        public bool UpdateOrderStatus(string orderID, OrderStatusEnum orderStatus);
+        public bool UpdateOrderStatus(string orderId, OrderStatusEnum orderStatus);
+
+        public bool UpdateOrderDeliveryDate(string orderId, DateTime scheduledDeliveryDate);
 
         public bool DeleteOrder(string orderId);
     }

@@ -59,6 +59,7 @@ namespace ThAmCo.Profiles.Mapper
             CreateMap<Order, OrderDTO>()
                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
                .ForMember(dest => dest.OrderCreationDate, opt => opt.MapFrom(src => src.OrderCreationDate))
+               .ForMember(dest => dest.DeliveryDate, opt => opt.MapFrom(src => src.DeliveredDate))
                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy))
                .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod))
                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice))

@@ -1,4 +1,6 @@
-﻿namespace DomainObjects.Customer
+﻿using DomainObjects.Orders;
+
+namespace DomainObjects.Customer
 {
     public class Customer
     {
@@ -6,5 +8,6 @@
         public string CustomerName { get; set; }
         public string CustomerContactNumber { get; set; }
         public string CustomerEmailAddress { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

@@ -49,6 +49,11 @@ namespace DataContext
                  .WithMany()
                  .OnDelete(DeleteBehavior.ClientSetNull); // Add this line to handle deletion behavior if necessary;
 
+            modelBuilder.Entity<Order>()
+              .HasOne(o => o.Customer)
+              .WithMany(c => c.Orders)
+              .HasForeignKey(o => o.CustomerId);
+
             // Define the many-to-many relationship between Order and OrderItem
             modelBuilder.Entity<OrderItem>()
                 .HasKey(oi => oi.OrderItemId); // Assuming OrderItemId is the primary key for OrderItem
