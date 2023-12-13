@@ -25,6 +25,8 @@ namespace DataContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("Orders");
+
             modelBuilder.Entity<Customer>()
                 .HasKey(c => c.CustomerId);
 
