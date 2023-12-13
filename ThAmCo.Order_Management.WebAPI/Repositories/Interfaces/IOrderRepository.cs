@@ -2,7 +2,7 @@
 using DomainObjects.Customer;
 using DomainObjects.Orders;
 
-namespace Repositories.Interfaces
+namespace ThAmCo.Order_Management.WebAPI.Repositories.Interfaces
 {
     public interface IOrderRepository
     {

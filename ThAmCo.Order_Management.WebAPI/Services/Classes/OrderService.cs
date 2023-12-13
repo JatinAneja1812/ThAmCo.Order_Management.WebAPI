@@ -7,10 +7,11 @@ using DomainObjects.Customer;
 using DomainObjects.Orders;
 using Enums;
 using Exceptions;
-using Repositories.Interfaces;
 using Services.Interfaces;
+using ThAmCo.Order_Management.WebAPI.Repositories.Interfaces;
+using ThAmCo.Order_Management.WebAPI.Services.Interfaces;
 
-namespace Services.Classes
+namespace ThAmCo.Order_Management.WebAPI.Services.Classes
 {
     public class OrderService : IOrderService
     {
@@ -31,19 +32,6 @@ namespace Services.Classes
         {
             try
             {
-                // Revert this
-                orderDTO.BillingAddress = new CompanyDetailsDTO
-                {
-                    CompanyAddressId = "AY821Y",
-                    CompanyName = "Three Amigos Cooperation",
-                    ShopNumber = "433",
-                    Street = "Corporate Avenue",
-                    City = "MiddlesBrough",
-                    Country = "United Kingdoms",
-                    PostalCode = "TS12RU"
-                };
-
-
                 Order newOrder = _mapper.Map<AddNewOrderDTO, Order>(orderDTO);
                 newOrder.OrderId = _guidUtility.GenerateShortGuid(Guid.NewGuid());
                 newOrder.isCreatedByStaff = true;
@@ -222,7 +210,7 @@ namespace Services.Classes
             {
                 Order existsingOrder = _orderRepository.GetOrderByIdFromDatabase(orderId) ?? throw new DataNotFoundException();
 
-                if(orderStatus == OrderStatusEnum.Delivered)
+                if (orderStatus == OrderStatusEnum.Delivered)
                 {
                     existsingOrder.IsArchived = true;
                 }
