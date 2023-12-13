@@ -52,12 +52,7 @@ namespace ThAmCo.Order_Management.WebAPI
 
 
             // Configure the database context
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var connectionString = configuration.GetConnectionString("ConnectionString");
+            var connectionString = _configuration.GetConnectionString("OrdersConnectionsString");
             services.AddDbContext<OrdersContext>(options =>
                 options.UseSqlServer(connectionString));
 
