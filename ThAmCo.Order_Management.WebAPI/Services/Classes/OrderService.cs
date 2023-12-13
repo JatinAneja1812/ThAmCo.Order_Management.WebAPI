@@ -31,19 +31,6 @@ namespace Services.Classes
         {
             try
             {
-                // Revert this
-                orderDTO.BillingAddress = new CompanyDetailsDTO
-                {
-                    CompanyAddressId = "AY821Y",
-                    CompanyName = "Three Amigos Cooperation",
-                    ShopNumber = "433",
-                    Street = "Corporate Avenue",
-                    City = "MiddlesBrough",
-                    Country = "United Kingdoms",
-                    PostalCode = "TS12RU"
-                };
-
-
                 Order newOrder = _mapper.Map<AddNewOrderDTO, Order>(orderDTO);
                 newOrder.OrderId = _guidUtility.GenerateShortGuid(Guid.NewGuid());
                 newOrder.isCreatedByStaff = true;
