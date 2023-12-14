@@ -54,7 +54,13 @@ namespace ThAmCo.Order_Management.WebAPI
             // Configure the database context
             var connectionString = _configuration.GetConnectionString("OrdersConnectionsString");
             services.AddDbContext<OrdersContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(connectionString, sqlServerOptionsAction: sqlOptions =>
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(1),
+                errorNumbersToAdd: null
+            )
+            ));
 
 
             services.AddAutoMapper(cfg => cfg.AddProfile<OrderProfile>());
