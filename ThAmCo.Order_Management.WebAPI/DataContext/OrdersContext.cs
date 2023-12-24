@@ -25,7 +25,7 @@ namespace DataContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("Orders");
+            //modelBuilder.HasDefaultSchema("Orders");   // Required when deployed in Azure
 
             modelBuilder.Entity<Customer>()
                 .HasKey(c => c.CustomerId);
