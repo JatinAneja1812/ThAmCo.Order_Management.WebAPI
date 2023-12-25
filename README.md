@@ -56,6 +56,6 @@ Before you can run the ThAmCo Orders Management WebAPI project in Visual Studio 
 6. Clean the project. Click build(On top of IDE) -> Clean Solution.
 7. Click on ThAmCo.Order_Managment.WebAPI on top navigation bar or either click on "Play" button to run the project.
 
-If there is error connecting to your local database make sure you have install correct version of SQL Server and SQL Server Managment Studio is connected. 
+If there is error connecting to your local database make sure you have installed correct version of SQL Server and SQL Server Managment Studio is connected. 
 Also in SQL Server Managment Studio : Database Engine name is : Localhost\\SQLExpress.
 
