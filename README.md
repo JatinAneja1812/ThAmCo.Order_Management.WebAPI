@@ -59,3 +59,7 @@ Before you can run the ThAmCo Orders Management WebAPI project in Visual Studio 
 If there is error connecting to your local database make sure you have installed correct version of SQL Server and SQL Server Managment Studio is connected. 
 Also in SQL Server Managment Studio : Database Engine name is : Localhost\\SQLExpress.
 
+## Connected Projects 
+- ThAmCo.User_Profiles :       Link:[here](https://github.com/JatinAneja1812/ThAmCo.User_Profiles).
+- ThAmCo.Staff_Portal.WebAPI : Link:[here](https://github.com/JatinAneja1812/ThAmCo.Staff_Protal_BFF.WebAPI).
+- thamco_staff_frontend :      Link:[here](https://github.com/JatinAneja1812/thamco_staff_frontendapp).
